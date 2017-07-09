@@ -25,6 +25,6 @@ public:
 	void Run();
 
 private:
-	void Update(double time, double delta);
-	void Render(double time, double delta);
+	void Update(double delta);
+	void Render(double delta);
 };

@@ -56,12 +56,12 @@ System::~System()
 
 void System::Run()
 {
+	int i = 0;
 	bool running = true;
+	double time = SDL_GetTicks() / 1000.0;
 
 	while (running)
 	{
-		uint32_t ticks = SDL_GetTicks();
-
 		while (SDL_PollEvent(&lastEvent))
 		{
 			switch (lastEvent.type)
@@ -88,31 +88,28 @@ void System::Run()
 			}
 		}
 
-		double time = ticks / 1000;
-		double delta = SDL_GetTicks() - ticks;
+		double delta = (SDL_GetTicks() / 1000.0) - time;
+		double time = SDL_GetTicks() / 1000.0;
 
-		Update(time, delta);
-		Render(time, delta);
-
-		if (delta < Constants::TargetTicks)
-		{
-			SDL_Delay(Constants::TargetTicks - (uint32_t)delta);
-		}
+		Update(delta);
+		Render(delta);
 	}
 }
 
 
-void System::Update(double time, double delta)
+void System::Update(double delta)
 {
-	uint8_t r = static_cast<uint8_t>(sin(0.01 * time + 0) * 127 + 128);
-	uint8_t g = static_cast<uint8_t>(sin(0.01 * time + 2) * 127 + 128);
-	uint8_t b = static_cast<uint8_t>(sin(0.01 * time + 4) * 127 + 128);
+	int i = static_cast<int>(delta) * 100;
+
+	uint8_t r = static_cast<uint8_t>(sin(0.01 * i + 0) * 127 + 128);
+	uint8_t g = static_cast<uint8_t>(sin(0.01 * i + 2) * 127 + 128);
+	uint8_t b = static_cast<uint8_t>(sin(0.01 * i + 4) * 127 + 128);
 
 	SDL_SetRenderDrawColor(renderer.get(), r, g, b, 255);
 }
 
 
-void System::Render(double time, double delta)
+void System::Render(double delta)
 {
 	SDL_RenderClear(renderer.get());
 	SDL_RenderPresent(renderer.get());
